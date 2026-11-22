@@ -1,309 +1,272 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Raptors Pulse — Toronto Basketball</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+
+    <title>Raptors Pulse | Live Fan Experience</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 </head>
+
 <body>
 
-<header class="site-header">
-  <a class="wordmark" href="#home">
-    <img src="https://a.espncdn.com/i/teamlogos/nba/500/tor.png" alt="">
-    <span>RAPTORS<span class="red">PULSE</span></span>
-  </a>
+    <div class="background-glow" id="backgroundGlow"></div>
 
-  <nav>
-    <a href="#game">GAME NIGHT</a>
-    <a href="#players">PLAYERS</a>
-    <a href="#numbers">THE NUMBERS</a>
-    <a href="#watch">WATCH</a>
-  </nav>
-
-  <div class="header-tools">
-    <span class="live-state"><i></i><b id="connectionText">CONNECTING</b></span>
-    <button id="refreshBtn" type="button">
-      <span class="refresh-icon">↻</span> REFRESH
-    </button>
-  </div>
-</header>
-
-<main id="home">
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-noise"></div>
-
-    <div class="hero-topline">
-      <span>TORONTO, ONTARIO</span>
-      <span>EST. 1995 / WE THE NORTH</span>
-      <span>2026—27 SEASON</span>
-    </div>
-
-    <div class="hero-content">
-      <div class="hero-copy">
-        <p class="eyebrow"><i></i> THE CITY. THE GAME. THE CULTURE.</p>
-
-        <h1>THIS IS<br>OUR <em>COURT.</em></h1>
-
-        <p class="hero-deck">
-          Every game leaves a mark. Follow the team, get to know the roster,
-          and catch the moments worth watching.
-        </p>
-
-        <a class="hero-cta" href="#game">
-          GET IN THE GAME <b>↘</b>
+    <header class="navbar">
+        <a href="#" class="brand">
+            <img src="https://a.espncdn.com/i/teamlogos/nba/500/tor.png"
+                 alt="Toronto Raptors logo">
+            <span>RAPTORS <span class="red">NOW</span></span>
         </a>
-      </div>
 
-      <div class="hero-art">
-        <div class="hero-red-block"></div>
-        <div class="hero-giant">TOR</div>
-        <img src="https://a.espncdn.com/i/teamlogos/nba/500/tor.png" alt="Toronto Raptors logo">
-        <span class="hero-side-note">NORTH SIDE / 416</span>
-        <span class="hero-index">NO. 01</span>
-      </div>
-    </div>
-
-    <div class="hero-bottom">
-      <span>BUILT IN TORONTO. MADE FOR THE MOMENT.</span>
-      <span>SCROLL DOWN ↓</span>
-    </div>
-  </section>
-
-  <!-- GAME CENTER -->
-  <section class="game-section page-section" id="game">
-    <div class="section-top">
-      <span class="section-number">01 / COURTSIDE</span>
-      <span class="section-rule"></span>
-      <span class="section-tag">GAME NIGHT</span>
-    </div>
-
-    <div class="section-title-row">
-      <h2>THE NEXT<br><em>CHAPTER.</em></h2>
-      <p>One court. Two teams.<br>Forty-eight minutes to make it count.</p>
-    </div>
-
-    <div class="game-panel">
-      <div class="game-panel-head">
-        <span>TORONTO RAPTORS / GAME CENTER</span>
-        <span id="gameDate">CHECKING SCHEDULE</span>
-        <span id="gameStatus" class="game-pill">LOADING</span>
-      </div>
-
-      <div class="matchup">
-        <div class="team-block">
-          <img src="https://a.espncdn.com/i/teamlogos/nba/500/tor.png" alt="Raptors">
-          <strong>TOR</strong>
-          <small>TORONTO RAPTORS</small>
+        <div class="last-updated">
+            <span class="updated-label">LAST UPDATED</span>
+            <span id="lastUpdated">Waiting...</span>
         </div>
 
-        <div class="score-block">
-          <div class="scoreline">
-            <strong id="raptorsScore">—</strong>
-            <span>:</span>
-            <strong id="opponentScore">—</strong>
-          </div>
-          <p id="gameClock">WAITING FOR TIP-OFF</p>
-          <small id="gamePeriod">2026—27 SEASON</small>
+        <div class="nav-right">
+            <span class="connection">
+                <span class="status-dot"></span>
+                LIVE
+            </span>
+            <button id="refreshBtn" class="refresh-btn">
+                ↻ <span>Refresh</span>
+            </button>
         </div>
 
-        <div class="team-block opponent">
-          <img id="opponentLogo" src="https://a.espncdn.com/i/teamlogos/nba/500/nba.png" alt="Opponent">
-          <strong id="opponentAbbr">NBA</strong>
-          <small id="opponentName">NEXT OPPONENT</small>
+    </header>
+
+    <main>
+
+        <!-- HERO SECTION -->
+        <section class="hero">
+
+            <div class="hero-content">
+                <p class="eyebrow">TORONTO RAPTORS BASKETBALL</p>
+                <h1>TRACK RAPTOR GAMES<br><span>LIVE.</span></h1>
+                <p class="hero-description">
+                    Quickly track games, stats, and scores through live NBA data.
+                </p>
+
+                <div class="hero-stats">
+                    <div>
+                        <span class="stat-label">TEAM</span>
+                        <strong>TOR</strong>
+                    </div>
+
+                    <div>
+                        <span class="stat-label">LEAGUE</span>
+                        <strong>NBA</strong>
+                    </div>
+
+                    <div>
+                        <span class="stat-label">SEASON</span>
+                        <strong id="season">2026-27</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                <img src="https://a.espncdn.com/i/teamlogos/nba/500/tor.png" alt="Raptors emblem">
+                <div class="image-circle"></div>
+                <span class="hero-number">TOR</span>
+            </div>
+
+        </section>
+
+        <!-- LIVE GAME SECTION -->
+        <section class="section">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">REAL-TIME RESULTS</p>
+                    <h2>GAME <span>CENTER</span></h2>
+                </div>
+
+                <span class="live-label">
+                    <span class="status-dot"></span>
+                    <span id="gameStatus">CONNECTING</span>
+                </span>
+            </div>
+
+            <div class="game-card" id="gameCard">
+
+                <div class="game-top">
+                    <span>TORONTO RAPTORS</span>
+                    <span id="gameDate">LOADING...</span>
+                </div>
+
+                <div class="matchup">
+
+                    <div class="team">
+                        <img src="https://a.espncdn.com/i/teamlogos/nba/500/tor.png" alt="Toronto Raptors">
+                        <h3>TOR</h3>
+                        <p>Toronto Raptors</p>
+                    </div>
+
+                    <div class="score-area">
+                        <div class="score">
+                            <span id="raptorsScore">--</span>
+                            <span class="score-divider">:</span>
+                            <span id="opponentScore">--</span>
+                        </div>
+
+                        <p id="gameClock">WAITING FOR GAME DATA</p>
+                        <span id="gamePeriod" class="game-period">NBA</span>
+                    </div>
+
+                    <div class="team">
+                        <img id="opponentLogo" src="https://a.espncdn.com/i/teamlogos/nba/500/nba.png" alt="Opponent">
+                        <h3 id="opponentAbbr">NBA</h3>
+                        <p id="opponentName">OPPONENT</p>
+                    </div>
+
+                </div>
+
+                <div class="game-bottom">
+                    <span id="gameMessage">Retrieving basketball data...</span>
+                    <span class="data-indicator">Data from ESPN</span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- LEAGUE ACTIVITY -->
+        <section class="section">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">TODAY'S MATCHES</p>
+                    <h2>NBA <span>ACTIVITY</span></h2>
+                </div>
+            </div>
+
+            <div class="league-grid" id="leagueGames">
+                <div class="loading">Loading league activity...</div>
+            </div>
+
+        </section>
+
+        <!-- TEAM ENERGY -->
+        <section class="section energy-section">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">RAPTORS SCORE DIFFERENTIAL</p>
+                    <h2>RAPTORS <span>RUN</span></h2>
+                </div>
+            </div>
+
+            <div class="energy-card">
+
+                <div class="energy-info">
+                    <h3 id="energyTitle">COURT ENERGY</h3>
+                    <p id="energyDescription">Analyzing game information.</p>
+                </div>
+
+                <div class="energy-meter">
+                    <div class="meter-track">
+                        <div id="energyBar" class="meter-fill"></div>
+                    </div>
+
+                    <div class="meter-labels">
+                        <span>LOW</span>
+                        <strong id="energyValue">--%</strong>
+                        <span>HIGH</span>
+                    </div>
+                </div>
+
+                <div class="energy-visual" id="energyVisual">
+                    <div class="pulse-circle"></div>
+                    <div class="pulse-circle second"></div>
+                    <span>TOR</span>
+                </div>
+
+            </div>
+
+            <p class="small-note">
+                Raptors Run is a visual representation of the Raptors' performance in the current game. 
+                The energy level is calculated based on the score differential and game status, providing 
+                fans with a quick snapshot of how the team is performing on the court.
+            </p>
+
+        </section>
+
+        <!-- ROSTER -->
+        <section class="section roster-section">
+
+            <div class="section-heading roster-heading">
+                <div>
+                    <p class="eyebrow">Toronto Raptors Roster | 2026-27</p>
+                    <h2>THE <span>PLAYERS</span></h2>
+                </div>
+
+                <select id="positionFilter">
+                    <option value="all">All Players</option>
+                    <option value="G">Guards</option>
+                    <option value="F">Forwards</option>
+                    <option value="C">Centers</option>
+                </select>
+            </div>
+
+            <div class="player-grid" id="playerGrid">
+                <div class="loading">Loading Raptors roster...</div>
+            </div>
+
+        </section>
+
+        <!-- PLAYER SPOTLIGHT -->
+        <section class="section spotlight-section" id="spotlight">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">PLAYER SELECTION</p>
+                    <h2>THE <span>SPOTLIGHT</span></h2>
+                </div>
+            </div>
+
+            <div class="spotlight-card" id="spotlightCard">
+                <div class="spotlight-image">
+                    <img id="spotlightImage"
+                         src="https://a.espncdn.com/i/teamlogos/nba/500/tor.png"
+                         alt="Selected player">
+                </div>
+
+                <div class="spotlight-info">
+                    <p class="eyebrow">SELECT A PLAYER</p>
+                    <h3 id="spotlightName">TORONTO RAPTORS</h3>
+                    <p id="spotlightDetails">Select a player to see their attributes.</p>
+                    <span class="spotlight-number" id="spotlightNumber">TOR</span>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+       
+        <div class="brand footer-brand">
+            RAPTORS <span class="red">NOW</span>
         </div>
-      </div>
 
-      <div class="game-panel-foot">
-        <p id="gameMessage">Getting the latest from the league feed.</p>
-        <span>LIVE SCORES / ESPN DATA</span>
-      </div>
-    </div>
-  </section>
+        <p>AN INTERACTIVE NBA DATA EXPERIENCE</p>
 
-  <!-- NBA SCORES -->
-  <section class="numbers-section page-section" id="numbers">
-    <div class="section-top">
-      <span class="section-number">02 / LEAGUE CHECK</span>
-      <span class="section-rule"></span>
-      <span class="section-tag">AROUND THE NBA</span>
-    </div>
+        <p class="footer-note">Data provided by ESPN's public API.</p>
+    
+    </footer>
 
-    <div class="league-heading">
-      <h2>THE REST<br>OF THE <em>LEAGUE.</em></h2>
-      <p>What's happening<br>beyond Toronto?</p>
-    </div>
 
-    <div class="league-table-head">
-      <span>DATE</span>
-      <span>AWAY</span>
-      <span>HOME</span>
-      <span>SCORE</span>
-      <span>STATUS</span>
-    </div>
+    <script src="script.js"></script>
 
-    <div id="leagueGames" class="league-table">
-      <p class="loading">Loading the league slate…</p>
-    </div>
-  </section>
-
-  <!-- ROSTER -->
-  <section class="players-section page-section" id="players">
-    <div class="section-top">
-      <span class="section-number">03 / THE PEOPLE</span>
-      <span class="section-rule"></span>
-      <span class="section-tag">ROSTER FILE</span>
-    </div>
-
-    <div class="players-heading">
-      <div>
-        <p class="eyebrow"><i></i> THE NAMES BEHIND THE JERSEYS</p>
-        <h2>MEET THE<br><em>NORTH.</em></h2>
-      </div>
-
-      <div class="roster-tools">
-        <label for="positionFilter">SORT THE ROSTER</label>
-        <select id="positionFilter">
-          <option value="all">ALL POSITIONS</option>
-          <option value="G">GUARDS</option>
-          <option value="F">FORWARDS</option>
-          <option value="C">CENTERS</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="roster-labels">
-      <span>PLAYER</span>
-      <span>POSITION</span>
-      <span>JERSEY</span>
-      <span>PROFILE</span>
-    </div>
-
-    <div id="playerGrid" class="roster-list">
-      <p class="loading">Loading the Raptors roster…</p>
-    </div>
-  </section>
-
-  <!-- PLAYER PROFILE -->
-  <section class="profile-section" id="spotlight">
-    <div class="profile-image-wrap">
-      <div class="profile-image-backdrop"></div>
-      <img id="spotlightImage" src="https://a.espncdn.com/i/teamlogos/nba/500/tor.png" alt="Selected Raptors player">
-      <span class="image-caption">TORONTO RAPTORS / PLAYER FILE</span>
-    </div>
-
-    <div class="profile-content">
-      <p class="eyebrow"><i></i> 04 / PLAYER SPOTLIGHT</p>
-
-      <p class="profile-overline" id="spotlightPosition">
-        SELECT A PLAYER FROM THE ROSTER
-      </p>
-
-      <h2 id="spotlightName">THE<br><em>ROSTER.</em></h2>
-
-      <p id="spotlightDetails" class="profile-bio">
-        Pick a name above to explore their season numbers and social links.
-      </p>
-
-      <div class="profile-meta">
-        <span id="spotlightNumber">JERSEY / —</span>
-        <span id="statsStatus">PLAYER DATA</span>
-      </div>
-
-      <div class="stats-title">
-        <h3>SEASON<br><em>NUMBERS.</em></h3>
-        <span>PLAYER STATISTICS</span>
-      </div>
-
-      <div id="playerStats" class="stats-grid">
-        <p class="stats-empty">Choose a player to load their stats.</p>
-      </div>
-
-      <div class="social-area">
-        <span>FOLLOW THE PLAYER</span>
-        <div id="socialLinks" class="social-links">
-          <span>Social links will appear here.</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- VIDEO HIGHLIGHTS -->
-  <section class="watch-section page-section" id="watch">
-    <div class="section-top">
-      <span class="section-number">05 / PRESS PLAY</span>
-      <span class="section-rule"></span>
-      <span class="section-tag">THE HIGHLIGHT REEL</span>
-    </div>
-
-    <div class="watch-heading">
-      <h2>DON'T JUST<br>READ IT. <em>WATCH IT.</em></h2>
-      <p>Big plays, big nights, and the moments<br>that get the whole city talking.</p>
-    </div>
-
-    <div class="video-feature">
-      <div class="video-mark">▶</div>
-
-      <div>
-        <p class="eyebrow"><i></i> OFFICIAL NBA VIDEO</p>
-        <h3>THE LATEST<br>RAPTORS <em>HIGHLIGHTS.</em></h3>
-
-        <p>
-          Find game recaps, top plays, and post-game clips from the NBA's
-          official video channels.
-        </p>
-
-        <a id="highlightLink"
-           href="https://www.youtube.com/results?search_query=Toronto+Raptors+official+highlights"
-           target="_blank" rel="noopener">
-          WATCH RAPTORS HIGHLIGHTS ↗
-        </a>
-      </div>
-    </div>
-
-    <div class="watch-links">
-      <a href="https://www.nba.com/watch" target="_blank" rel="noopener">
-        <span>01</span>
-        <b>NBA LEAGUE PASS</b>
-        <small>LIVE GAMES & FULL REPLAYS ↗</small>
-      </a>
-
-      <a href="https://www.youtube.com/@NBA" target="_blank" rel="noopener">
-        <span>02</span>
-        <b>NBA ON YOUTUBE</b>
-        <small>OFFICIAL VIDEO & HIGHLIGHTS ↗</small>
-      </a>
-
-      <a href="https://www.nba.com/raptors/videos" target="_blank" rel="noopener">
-        <span>03</span>
-        <b>RAPTORS VIDEO</b>
-        <small>TEAM CLIPS & FEATURES ↗</small>
-      </a>
-    </div>
-
-    <p class="rights-note">
-      Live broadcasts and full-game replays may require an NBA League Pass
-      subscription or an authorized local broadcaster.
-    </p>
-  </section>
-
-</main>
-
-<footer class="site-footer">
-  <a class="wordmark" href="#home">
-    <img src="https://a.espncdn.com/i/teamlogos/nba/500/tor.png" alt="">
-    <span>RAPTORS<span class="red">PULSE</span></span>
-  </a>
-
-  <p>INDEPENDENT FAN PROJECT / NOT AFFILIATED WITH THE NBA OR TORONTO RAPTORS.</p>
-  <a href="#home">BACK TO TOP ↑</a>
-</footer>
-
-<script src="script.js"></script>
+    
 </body>
+
+
+
 </html>
