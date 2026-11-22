@@ -1,6 +1,6 @@
 const API = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba";
 
-const ENDPOINTS = {
+const URLS = {
   scoreboard: `${API}/scoreboard?limit=100`,
   roster: `${API}/teams/tor/roster`,
   schedule: `${API}/teams/tor/schedule`
@@ -11,20 +11,16 @@ let schedule = [];
 let scoreboard = [];
 let selectedPlayer = null;
 
-const $ = (id) => document.getElementById(id);
-
-const refreshBtn = $("refreshBtn");
-const playerGrid = $("playerGrid");
-const positionFilter = $("positionFilter");
+const $ = id => document.getElementById(id);
 
 
 /* FETCH DATA */
 
-async function fetchJSON(url) {
+async function getJSON(url) {
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error(`ESPN request failed (${response.status})`);
+    throw new Error(`ESPN API error: ${response.status}`);
   }
 
   return response.json();
@@ -34,101 +30,94 @@ async function fetchJSON(url) {
 /* LOAD ALL DATA */
 
 async function loadData() {
-  refreshBtn.disabled = true;
-  refreshBtn.innerHTML = "Loading…";
+  const button = $("refreshBtn");
+
+  button.disabled = true;
+  button.textContent = "…";
 
   try {
-    const [scoreData, rosterData, scheduleData] = await Promise.all([
-      fetchJSON(ENDPOINTS.scoreboard),
-      fetchJSON(ENDPOINTS.roster),
-      fetchJSON(ENDPOINTS.schedule)
+    const [scores, players, games] = await Promise.all([
+      getJSON(URLS.scoreboard),
+      getJSON(URLS.roster),
+      getJSON(URLS.schedule)
     ]);
 
-    scoreboard = scoreData.events || [];
+    scoreboard = scores.events || [];
 
-    const groups = rosterData.athletes || [];
-
-    roster = groups
+    roster = (players.athletes || [])
       .flatMap(group => group.items || [group])
       .filter(player => player.id);
 
-    schedule = scheduleData.events || [];
+    schedule = games.events || [];
 
-    updateConnection(true);
-    displayGame();
-    displayLeague();
-    displayRoster();
-    updateSeason();
+    setConnection(true);
+    showGame();
+    showLeague();
+    showRoster();
 
   } catch (error) {
-    console.error("Raptors Pulse:", error);
+    console.error(error);
 
-    updateConnection(false);
+    setConnection(false);
 
     $("gameStatus").textContent = "DATA UNAVAILABLE";
 
     $("gameMessage").textContent =
-      "We couldn't load the latest data. Please try again.";
-
-    playerGrid.innerHTML =
-      '<p class="loading">Roster data is temporarily unavailable.</p>';
+      "Unable to load data. Try refreshing.";
 
     $("leagueGames").innerHTML =
-      '<p class="loading">League scores are temporarily unavailable.</p>';
+      '<p class="loading">NBA data is temporarily unavailable.</p>';
+
+    $("playerGrid").innerHTML =
+      '<p class="loading">Roster data is temporarily unavailable.</p>';
 
   } finally {
-    refreshBtn.disabled = false;
-    refreshBtn.innerHTML = "↻ Refresh";
+    button.disabled = false;
+    button.textContent = "↻";
   }
 }
 
 
-/* CONNECTION STATUS */
+/* CONNECTION */
 
-function updateConnection(connected) {
+function setConnection(connected) {
   document.querySelectorAll(".status-dot").forEach(dot => {
     dot.classList.toggle("active", connected);
   });
 
   $("connectionText").textContent =
-    connected ? "DATA CONNECTED" : "CONNECTION ISSUE";
+    connected ? "CONNECTED" : "OFFLINE";
 }
 
 
-/* SEASON */
+/* SAFE TEXT */
 
-function updateSeason() {
-  const now = new Date();
-
-  const endYear = now.getMonth() >= 9
-    ? now.getFullYear() + 1
-    : now.getFullYear();
-
-  const season = `${endYear - 1}-${String(endYear).slice(-2)}`;
-
-  document.querySelectorAll(".hero .kicker").forEach(element => {
-    element.innerHTML =
-      `<span class="kicker-line"></span> TORONTO BASKETBALL / ${season}`;
-  });
+function safe(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
 }
 
 
 /* DATE FORMAT */
 
-function formatDate(date) {
-  if (!date) return "DATE UNAVAILABLE";
+function dateLabel(date) {
+  if (!date) return "—";
 
   return new Date(date).toLocaleDateString("en-CA", {
     month: "short",
-    day: "numeric",
-    year: "numeric"
+    day: "numeric"
   }).toUpperCase();
 }
 
 
 /* FIND RAPTORS GAME */
 
-function findRaptorsGame(events) {
+function findTorontoGame(events) {
   return events.find(event =>
     (event.competitions?.[0]?.competitors || []).some(team =>
       team.team?.abbreviation?.toUpperCase() === "TOR"
@@ -139,47 +128,43 @@ function findRaptorsGame(events) {
 
 /* GAME CENTER */
 
-function displayGame() {
-  let game = findRaptorsGame(scoreboard);
+function showGame() {
+  let game = findTorontoGame(scoreboard);
 
   if (!game) {
-    const upcoming = schedule
-      .filter(event =>
-        new Date(event.date).getTime() > Date.now() &&
-        !event.status?.type?.completed
+    game = schedule
+      .filter(item =>
+        new Date(item.date) > new Date() &&
+        !item.status?.type?.completed
       )
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    game = upcoming[0];
+      .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
   }
 
   if (!game) {
-    return showNoGame();
+    return noGame();
   }
 
-  const competition = game.competitions?.[0];
-  const teams = competition?.competitors || [];
+  const teams = game.competitions?.[0]?.competitors || [];
 
-  const toronto = teams.find(team =>
+  const tor = teams.find(team =>
     team.team?.abbreviation?.toUpperCase() === "TOR"
   );
 
-  const opponent = teams.find(team =>
+  const opp = teams.find(team =>
     team.team?.abbreviation?.toUpperCase() !== "TOR"
   );
 
-  if (!toronto || !opponent) {
-    return showNoGame();
+  if (!tor || !opp) {
+    return noGame();
   }
 
-  const status = game.status?.type || {};
-  const state = status.state || "pre";
+  const state = game.status?.type?.state || "pre";
 
   const live = state === "in";
   const final = state === "post";
 
-  const torScore = Number(toronto.score) || 0;
-  const oppScore = Number(opponent.score) || 0;
+  const torScore = Number(tor.score) || 0;
+  const oppScore = Number(opp.score) || 0;
 
   $("raptorsScore").textContent =
     live || final ? torScore : "—";
@@ -188,49 +173,45 @@ function displayGame() {
     live || final ? oppScore : "—";
 
   $("opponentAbbr").textContent =
-    opponent.team.abbreviation || "NBA";
+    opp.team.abbreviation || "NBA";
 
   $("opponentName").textContent =
-    opponent.team.displayName || "OPPONENT";
+    opp.team.shortDisplayName ||
+    opp.team.displayName ||
+    "OPPONENT";
 
   $("opponentLogo").src =
-    opponent.team.logo ||
+    opp.team.logo ||
     "https://a.espncdn.com/i/teamlogos/nba/500/nba.png";
 
-  $("gameDate").textContent = formatDate(game.date);
+  $("gameDate").textContent = dateLabel(game.date);
 
   $("gameStatus").textContent =
-    live ? "LIVE NOW" : final ? "FINAL" : "UPCOMING";
+    live ? "LIVE" : final ? "FINAL" : "UPCOMING";
 
   $("gameClock").textContent =
     live
-      ? (status.displayClock || "GAME IN PROGRESS")
+      ? (game.status?.displayClock || "GAME IN PROGRESS")
       : final
         ? "GAME COMPLETED"
-        : formatDate(game.date);
+        : dateLabel(game.date);
 
   $("gamePeriod").textContent =
     live
-      ? (status.detail || "IN PROGRESS")
+      ? (game.status?.type?.detail || "IN PROGRESS")
       : final
-        ? "FINAL SCORE"
-        : "UPCOMING MATCHUP";
+        ? "FINAL"
+        : "UPCOMING";
 
-  let message = "The Raptors are preparing for their next matchup.";
-
-  if (live) {
-    message = "Toronto is on the court. Follow the score as it changes.";
-  }
-
-  if (final) {
-    message = torScore > oppScore
-      ? "Toronto takes the win."
-      : torScore < oppScore
-        ? "Toronto falls short this time."
-        : "The game finished in a tie.";
-  }
-
-  $("gameMessage").textContent = message;
+  $("gameMessage").textContent = live
+    ? "Toronto is on the court. Follow the score as it changes."
+    : final
+      ? (
+          torScore > oppScore
+            ? "Toronto takes the win."
+            : "The matchup has concluded."
+        )
+      : "The Raptors are preparing for their next matchup.";
 
   updateEnergy(state, torScore, oppScore);
 }
@@ -238,7 +219,7 @@ function displayGame() {
 
 /* NO GAME */
 
-function showNoGame() {
+function noGame() {
   $("raptorsScore").textContent = "—";
   $("opponentScore").textContent = "—";
 
@@ -248,14 +229,13 @@ function showNoGame() {
   $("opponentLogo").src =
     "https://a.espncdn.com/i/teamlogos/nba/500/nba.png";
 
-  $("gameStatus").textContent = "NO GAME LISTED";
+  $("gameDate").textContent = "TORONTO RAPTORS";
+  $("gameStatus").textContent = "NO GAME";
   $("gameClock").textContent = "AWAITING NEXT MATCHUP";
   $("gamePeriod").textContent = "NBA";
 
   $("gameMessage").textContent =
-    "There is no Raptors game available in the current feed.";
-
-  $("gameDate").textContent = "TORONTO RAPTORS";
+    "No Raptors game is available in the current feed.";
 
   updateEnergy("pre", 0, 0);
 }
@@ -263,51 +243,52 @@ function showNoGame() {
 
 /* TEAM ENERGY */
 
-function updateEnergy(state, torScore, opponentScore) {
+function updateEnergy(state, tor, opp) {
   let energy = 25;
 
-  let title = "PRE-GAME ENERGY";
-  let description = "The anticipation builds before tip-off.";
+  let title = "PRE-GAME<br><em>ENERGY.</em>";
+
+  let description =
+    "The anticipation builds before tip-off.";
 
   if (state === "in") {
     energy = Math.min(
       100,
-      45 + (torScore % 30) + (torScore > opponentScore ? 15 : 0)
+      45 + (tor % 30) + (tor > opp ? 15 : 0)
     );
 
-    title = "GAME IN PROGRESS";
+    title = "GAME<br><em>ON.</em>";
 
-    description = torScore > opponentScore
+    description = tor > opp
       ? "Toronto currently leads the scoreboard."
       : "The Raptors are battling on the court.";
-  }
 
-  else if (state === "post") {
-    energy = torScore > opponentScore
-      ? 95
-      : torScore === opponentScore
-        ? 50
-        : 30;
+  } else if (state === "post") {
+    energy = tor > opp ? 95 : 30;
 
-    title = torScore > opponentScore
-      ? "WINNING ENERGY"
-      : "GAME COMPLETED";
+    title = tor > opp
+      ? "WINNING<br><em>ENERGY.</em>"
+      : "FINAL<br><em>BUZZER.</em>";
 
-    description = torScore > opponentScore
+    description = tor > opp
       ? "Toronto finished ahead on the scoreboard."
       : "The matchup has concluded.";
   }
 
-  $("energyBar").style.width = `${energy}%`;
-  $("energyValue").textContent = `${energy}%`;
-  $("energyTitle").textContent = title;
+  $("energyTitle").innerHTML = title;
+
   $("energyDescription").textContent = description;
+
+  $("energyValue").innerHTML =
+    `${energy}<span>%</span>`;
+
+  $("energyBar").style.width = `${energy}%`;
 }
 
 
 /* AROUND THE NBA */
 
-function displayLeague() {
+function showLeague() {
   const games = scoreboard.filter(event =>
     !(event.competitions?.[0]?.competitors || []).some(team =>
       team.team?.abbreviation?.toUpperCase() === "TOR"
@@ -316,22 +297,31 @@ function displayLeague() {
 
   if (!games.length) {
     $("leagueGames").innerHTML =
-      '<p class="loading">No other NBA games are listed right now.</p>';
+      '<p class="loading">No other NBA games listed right now.</p>';
 
     return;
   }
 
-  $("leagueGames").innerHTML = games.slice(0, 9).map(game => {
+  $("leagueGames").innerHTML = games.slice(0, 12).map(game => {
     const teams = game.competitions?.[0]?.competitors || [];
 
-    const away = teams.find(team => team.homeAway === "away");
-    const home = teams.find(team => team.homeAway === "home");
+    const away = teams.find(team =>
+      team.homeAway === "away"
+    );
+
+    const home = teams.find(team =>
+      team.homeAway === "home"
+    );
 
     if (!away || !home) return "";
 
     const state = game.status?.type?.state || "pre";
 
-    const label =
+    const scores = state === "pre"
+      ? "— : —"
+      : `${safe(away.score)} : ${safe(home.score)}`;
+
+    const status =
       state === "in"
         ? "LIVE"
         : state === "post"
@@ -339,34 +329,27 @@ function displayLeague() {
           : "SCHEDULED";
 
     return `
-      <article class="league-card">
+      <div class="league-row">
 
-        <p class="game-date">
-          ${formatDate(game.date)}
-        </p>
+        <span class="date">
+          ${dateLabel(game.date)}
+        </span>
 
-        <div class="league-team">
-          <span>${escapeHTML(away.team.abbreviation || "AWAY")}</span>
-          <strong>
-            ${state !== "pre" ? escapeHTML(away.score ?? "—") : "—"}
-          </strong>
-        </div>
+        <span class="teams">
+          ${safe(away.team.abbreviation)}
+          <b>VS</b>
+          ${safe(home.team.abbreviation)}
+        </span>
 
-        <div class="league-team">
-          <span>${escapeHTML(home.team.abbreviation || "HOME")}</span>
-          <strong>
-            ${state !== "pre" ? escapeHTML(home.score ?? "—") : "—"}
-          </strong>
-        </div>
+        <span class="scores">
+          ${scores}
+        </span>
 
-        <p class="league-status">
-          ${label}
-          ${game.status?.type?.detail
-            ? " · " + escapeHTML(game.status.type.detail)
-            : ""}
-        </p>
+        <span class="state">
+          ${status}
+        </span>
 
-      </article>
+      </div>
     `;
   }).join("");
 }
@@ -374,95 +357,83 @@ function displayLeague() {
 
 /* ROSTER */
 
-function displayRoster() {
-  const filter = positionFilter.value;
+function showRoster() {
+  const filter = $("positionFilter").value;
 
   const players = roster.filter(player => {
-    const position = player.position?.abbreviation || "";
+    const position =
+      player.position?.abbreviation || "";
 
     return filter === "all" || position.includes(filter);
   });
 
   if (!players.length) {
-    playerGrid.innerHTML =
+    $("playerGrid").innerHTML =
       '<p class="loading">No players found for this position.</p>';
 
     return;
   }
 
-  playerGrid.innerHTML = players.map(player => {
+  $("playerGrid").innerHTML = players.map(player => {
     const name =
-      player.displayName || player.fullName || "Unknown player";
+      player.displayName ||
+      player.fullName ||
+      "Unknown player";
 
     const position =
-      player.position?.abbreviation || "NBA";
+      player.position?.abbreviation || "—";
 
     const jersey =
       player.jersey || "—";
 
-    const image =
+    const photo =
       player.headshot?.href ||
       "https://a.espncdn.com/i/teamlogos/nba/500/tor.png";
 
     const selected =
-      selectedPlayer?.id === player.id ? "selected" : "";
+      selectedPlayer?.id === player.id
+        ? "selected"
+        : "";
 
     return `
-      <article
-        class="player-card ${selected}"
-        data-id="${escapeHTML(player.id)}"
+      <div
+        class="player-row ${selected}"
+        data-id="${safe(player.id)}"
         tabindex="0"
         role="button"
-        aria-label="View ${escapeHTML(name)}"
       >
 
-        <span class="player-number">
-          #${escapeHTML(jersey)}
+        <div class="player-name-cell">
+          <img
+            src="${safe(photo)}"
+            alt="${safe(name)}"
+            loading="lazy"
+          >
+
+          <strong>${safe(name)}</strong>
+        </div>
+
+        <span class="position">
+          ${safe(position)}
         </span>
 
-        <div class="player-photo">
-          <img
-            src="${escapeHTML(image)}"
-            alt="${escapeHTML(name)}"
-            loading="lazy"
-            onerror="this.onerror=null;this.src='https://a.espncdn.com/i/teamlogos/nba/500/tor.png'"
-          >
-        </div>
+        <span class="number">
+          #${safe(jersey)}
+        </span>
 
-        <div class="player-details">
-          <h3>${escapeHTML(name)}</h3>
+        <span class="view">
+          VIEW ↗
+        </span>
 
-          <p>
-            ${escapeHTML(position)} / Toronto Raptors
-          </p>
-
-          <span class="player-tag">
-            VIEW PLAYER ↗
-          </span>
-        </div>
-
-      </article>
+      </div>
     `;
   }).join("");
 }
 
 
-/* ESCAPE HTML */
-
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
-}
-
-
 /* PLAYER SPOTLIGHT */
 
-function selectPlayer(id) {
+function choosePlayer(id) {
   const player = roster.find(item =>
     String(item.id) === String(id)
   );
@@ -472,10 +443,13 @@ function selectPlayer(id) {
   selectedPlayer = player;
 
   const name =
-    player.displayName || player.fullName || "Player";
+    player.displayName ||
+    player.fullName ||
+    "Player";
 
   const position =
-    player.position?.displayName || "Basketball player";
+    player.position?.displayName ||
+    "Basketball player";
 
   const jersey =
     player.jersey || "—";
@@ -484,7 +458,8 @@ function selectPlayer(id) {
     player.headshot?.href ||
     "https://a.espncdn.com/i/teamlogos/nba/500/tor.png";
 
-  $("spotlightName").textContent = name.toUpperCase();
+  $("spotlightName").textContent =
+    name.toUpperCase();
 
   $("spotlightDetails").textContent =
     `${position} · Toronto Raptors`;
@@ -495,10 +470,10 @@ function selectPlayer(id) {
   $("spotlightImage").src = image;
   $("spotlightImage").alt = name;
 
-  document.querySelectorAll(".player-card").forEach(card => {
-    card.classList.toggle(
+  document.querySelectorAll(".player-row").forEach(row => {
+    row.classList.toggle(
       "selected",
-      card.dataset.id === String(id)
+      row.dataset.id === String(id)
     );
   });
 
@@ -511,28 +486,33 @@ function selectPlayer(id) {
 
 /* EVENT LISTENERS */
 
-refreshBtn.addEventListener("click", loadData);
+$("refreshBtn").addEventListener("click", loadData);
 
-positionFilter.addEventListener("change", displayRoster);
+$("positionFilter").addEventListener(
+  "change",
+  showRoster
+);
 
-playerGrid.addEventListener("click", event => {
-  const card = event.target.closest(".player-card");
+$("playerGrid").addEventListener("click", event => {
+  const row = event.target.closest(".player-row");
 
-  if (card) {
-    selectPlayer(card.dataset.id);
+  if (row) {
+    choosePlayer(row.dataset.id);
   }
 });
 
-playerGrid.addEventListener("keydown", event => {
-  if (event.key !== "Enter" && event.key !== " ") return;
+$("playerGrid").addEventListener("keydown", event => {
+  if (event.key !== "Enter" && event.key !== " ") {
+    return;
+  }
 
-  const card = event.target.closest(".player-card");
+  const row = event.target.closest(".player-row");
 
-  if (!card) return;
+  if (!row) return;
 
   event.preventDefault();
 
-  selectPlayer(card.dataset.id);
+  choosePlayer(row.dataset.id);
 });
 
 
