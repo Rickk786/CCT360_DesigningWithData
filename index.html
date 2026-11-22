@@ -1,21 +1,29 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Raptors Now — Toronto Raptors scores, roster, stats and highlights.">
 
-    <title>Raptors Pulse | Live Fan Experience</title>
+    <title>Raptors Now | Toronto Basketball</title>
 
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
     <div class="background-glow" id="backgroundGlow"></div>
 
+    <!-- NAVBAR -->
     <header class="navbar">
+
         <a href="#" class="brand">
             <img src="https://a.espncdn.com/i/teamlogos/nba/500/tor.png"
                  alt="Toronto Raptors logo">
@@ -28,16 +36,20 @@
         </div>
 
         <div class="nav-right">
+
             <span class="connection">
                 <span class="status-dot"></span>
                 LIVE
             </span>
-            <button id="refreshBtn" class="refresh-btn">
+
+            <button id="refreshBtn" class="refresh-btn" type="button">
                 ↻ <span>Refresh</span>
             </button>
+
         </div>
 
     </header>
+
 
     <main>
 
@@ -45,13 +57,18 @@
         <section class="hero">
 
             <div class="hero-content">
+
                 <p class="eyebrow">TORONTO RAPTORS BASKETBALL</p>
-                <h1>TRACK RAPTOR GAMES<br><span>LIVE.</span></h1>
+
+                <h1>THIS IS<br><span>TORONTO.</span></h1>
+
                 <p class="hero-description">
-                    Quickly track games, stats, and scores through live NBA data.
+                    Scores, players, and everything happening around the Raptors.
+                    Your place to keep up with the team.
                 </p>
 
                 <div class="hero-stats">
+
                     <div>
                         <span class="stat-label">TEAM</span>
                         <strong>TOR</strong>
@@ -66,23 +83,44 @@
                         <span class="stat-label">SEASON</span>
                         <strong id="season">2026-27</strong>
                     </div>
+
                 </div>
+
+                <div class="official-links">
+                    <a href="https://www.nba.com/raptors/"
+                       target="_blank" rel="noopener">
+                        OFFICIAL RAPTORS SITE ↗
+                    </a>
+
+                    <a href="https://www.nba.com/"
+                       target="_blank" rel="noopener">
+                        NBA.COM ↗
+                    </a>
+                </div>
+
             </div>
 
             <div class="hero-image">
-                <img src="https://a.espncdn.com/i/teamlogos/nba/500/tor.png" alt="Raptors emblem">
+
+                <img src="https://a.espncdn.com/i/teamlogos/nba/500/tor.png"
+                     alt="Raptors emblem">
+
                 <div class="image-circle"></div>
+
                 <span class="hero-number">TOR</span>
+
             </div>
 
         </section>
+
 
         <!-- LIVE GAME SECTION -->
         <section class="section">
 
             <div class="section-heading">
+
                 <div>
-                    <p class="eyebrow">REAL-TIME RESULTS</p>
+                    <p class="eyebrow">FOLLOW THE GAME</p>
                     <h2>GAME <span>CENTER</span></h2>
                 </div>
 
@@ -90,7 +128,9 @@
                     <span class="status-dot"></span>
                     <span id="gameStatus">CONNECTING</span>
                 </span>
+
             </div>
+
 
             <div class="game-card" id="gameCard">
 
@@ -99,149 +139,369 @@
                     <span id="gameDate">LOADING...</span>
                 </div>
 
+
                 <div class="matchup">
 
                     <div class="team">
-                        <img src="https://a.espncdn.com/i/teamlogos/nba/500/tor.png" alt="Toronto Raptors">
+
+                        <img src="https://a.espncdn.com/i/teamlogos/nba/500/tor.png"
+                             alt="Toronto Raptors">
+
                         <h3>TOR</h3>
                         <p>Toronto Raptors</p>
+
                     </div>
 
+
                     <div class="score-area">
+
                         <div class="score">
+
                             <span id="raptorsScore">--</span>
                             <span class="score-divider">:</span>
                             <span id="opponentScore">--</span>
+
                         </div>
 
                         <p id="gameClock">WAITING FOR GAME DATA</p>
+
                         <span id="gamePeriod" class="game-period">NBA</span>
+
                     </div>
 
+
                     <div class="team">
-                        <img id="opponentLogo" src="https://a.espncdn.com/i/teamlogos/nba/500/nba.png" alt="Opponent">
+
+                        <img id="opponentLogo"
+                             src="https://a.espncdn.com/i/teamlogos/nba/500/nba.png"
+                             alt="Opponent">
+
                         <h3 id="opponentAbbr">NBA</h3>
                         <p id="opponentName">OPPONENT</p>
+
                     </div>
 
                 </div>
 
+
                 <div class="game-bottom">
-                    <span id="gameMessage">Retrieving basketball data...</span>
+
+                    <span id="gameMessage">
+                        Getting the latest game information...
+                    </span>
+
                     <span class="data-indicator">Data from ESPN</span>
+
                 </div>
 
             </div>
 
+            <p class="external-note">
+                Want more game information?
+                <a href="https://www.nba.com/games"
+                   target="_blank" rel="noopener">
+                    Check the official NBA game center ↗
+                </a>
+            </p>
+
         </section>
+
 
         <!-- LEAGUE ACTIVITY -->
         <section class="section">
 
             <div class="section-heading">
+
                 <div>
-                    <p class="eyebrow">TODAY'S MATCHES</p>
+                    <p class="eyebrow">AROUND THE LEAGUE</p>
                     <h2>NBA <span>ACTIVITY</span></h2>
                 </div>
+
             </div>
 
             <div class="league-grid" id="leagueGames">
-                <div class="loading">Loading league activity...</div>
+
+                <div class="loading">
+                    Loading league activity...
+                </div>
+
             </div>
 
+            <p class="external-note">
+                See the full schedule and standings on
+                <a href="https://www.nba.com/schedule"
+                   target="_blank" rel="noopener">
+                    NBA.com ↗
+                </a>
+            </p>
+
         </section>
+
 
         <!-- TEAM ENERGY -->
         <section class="section energy-section">
 
             <div class="section-heading">
+
                 <div>
-                    <p class="eyebrow">RAPTORS SCORE DIFFERENTIAL</p>
+                    <p class="eyebrow">HOW TORONTO IS DOING</p>
                     <h2>RAPTORS <span>RUN</span></h2>
                 </div>
+
             </div>
+
 
             <div class="energy-card">
 
                 <div class="energy-info">
+
                     <h3 id="energyTitle">COURT ENERGY</h3>
-                    <p id="energyDescription">Analyzing game information.</p>
+
+                    <p id="energyDescription">
+                        Waiting for the latest game information.
+                    </p>
+
                 </div>
 
+
                 <div class="energy-meter">
+
                     <div class="meter-track">
                         <div id="energyBar" class="meter-fill"></div>
                     </div>
 
                     <div class="meter-labels">
+
                         <span>LOW</span>
                         <strong id="energyValue">--%</strong>
                         <span>HIGH</span>
+
                     </div>
+
                 </div>
 
+
                 <div class="energy-visual" id="energyVisual">
+
                     <div class="pulse-circle"></div>
                     <div class="pulse-circle second"></div>
+
                     <span>TOR</span>
+
                 </div>
 
             </div>
 
+
             <p class="small-note">
-                Raptors Run is a visual representation of the Raptors' performance in the current game. 
-                The energy level is calculated based on the score differential and game status, providing 
-                fans with a quick snapshot of how the team is performing on the court.
+                Raptors Run gives a quick look at the team's performance.
+                The energy level is based on the current score difference
+                and game status. It's a fan-friendly way to follow the action,
+                not an official NBA statistic.
             </p>
 
         </section>
+
 
         <!-- ROSTER -->
         <section class="section roster-section">
 
             <div class="section-heading roster-heading">
+
                 <div>
-                    <p class="eyebrow">Toronto Raptors Roster | 2026-27</p>
+                    <p class="eyebrow">GET TO KNOW THE TEAM</p>
                     <h2>THE <span>PLAYERS</span></h2>
                 </div>
 
+
                 <select id="positionFilter">
+
                     <option value="all">All Players</option>
                     <option value="G">Guards</option>
                     <option value="F">Forwards</option>
                     <option value="C">Centers</option>
+
                 </select>
+
             </div>
 
+
             <div class="player-grid" id="playerGrid">
-                <div class="loading">Loading Raptors roster...</div>
+
+                <div class="loading">
+                    Loading Raptors roster...
+                </div>
+
+            </div>
+
+
+            <div class="roster-links">
+
+                <a href="https://www.nba.com/raptors/roster"
+                   target="_blank" rel="noopener">
+                    OFFICIAL RAPTORS ROSTER ↗
+                </a>
+
+                <a href="https://www.nba.com/players"
+                   target="_blank" rel="noopener">
+                    NBA PLAYER PROFILES ↗
+                </a>
+
             </div>
 
         </section>
+
 
         <!-- PLAYER SPOTLIGHT -->
         <section class="section spotlight-section" id="spotlight">
 
             <div class="section-heading">
+
                 <div>
-                    <p class="eyebrow">PLAYER SELECTION</p>
-                    <h2>THE <span>SPOTLIGHT</span></h2>
+                    <p class="eyebrow">TAKE A CLOSER LOOK</p>
+                    <h2>PLAYER <span>SPOTLIGHT</span></h2>
                 </div>
+
             </div>
 
+
             <div class="spotlight-card" id="spotlightCard">
+
                 <div class="spotlight-image">
+
                     <img id="spotlightImage"
                          src="https://a.espncdn.com/i/teamlogos/nba/500/tor.png"
                          alt="Selected player">
+
                 </div>
 
+
                 <div class="spotlight-info">
-                    <p class="eyebrow">SELECT A PLAYER</p>
+
+                    <p class="eyebrow">PLAYER PROFILE</p>
+
                     <h3 id="spotlightName">TORONTO RAPTORS</h3>
-                    <p id="spotlightDetails">Select a player to see their attributes.</p>
-                    <span class="spotlight-number" id="spotlightNumber">TOR</span>
+
+                    <p id="spotlightDetails">
+                        Select a player from the roster to see their profile.
+                    </p>
+
+                    <span class="spotlight-number" id="spotlightNumber">
+                        TOR
+                    </span>
+
+                    <div class="player-socials">
+
+                        <p>FOLLOW THE TEAM</p>
+
+                        <a href="https://www.instagram.com/raptors/"
+                           target="_blank" rel="noopener">
+                            RAPTORS INSTAGRAM ↗
+                        </a>
+
+                        <a href="https://x.com/Raptors"
+                           target="_blank" rel="noopener">
+                            RAPTORS X ↗
+                        </a>
+
+                        <a href="https://www.nba.com/raptors/"
+                           target="_blank" rel="noopener">
+                            NBA PLAYER & TEAM INFO ↗
+                        </a>
+
+                    </div>
+
                 </div>
+
+            </div>
+
+
+            <div class="official-social-section">
+
+                <p class="eyebrow">FOLLOW THE GAME OFF THE COURT</p>
+
+                <h3>STAY IN THE <span>LOOP.</span></h3>
+
+                <div class="social-links">
+
+                    <a href="https://www.instagram.com/raptors/"
+                       target="_blank" rel="noopener">
+                        <span>INSTAGRAM</span>
+                        <strong>@raptors ↗</strong>
+                    </a>
+
+                    <a href="https://x.com/Raptors"
+                       target="_blank" rel="noopener">
+                        <span>X / TWITTER</span>
+                        <strong>@Raptors ↗</strong>
+                    </a>
+
+                    <a href="https://www.instagram.com/nba/"
+                       target="_blank" rel="noopener">
+                        <span>NBA INSTAGRAM</span>
+                        <strong>@nba ↗</strong>
+                    </a>
+
+                    <a href="https://x.com/NBA"
+                       target="_blank" rel="noopener">
+                        <span>NBA X / TWITTER</span>
+                        <strong>@NBA ↗</strong>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- HIGHLIGHTS -->
+        <section class="section highlights-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="eyebrow">CATCH UP ON THE ACTION</p>
+                    <h2>WATCH THE <span>HIGHLIGHTS</span></h2>
+                </div>
+
+            </div>
+
+
+            <div class="highlight-links">
+
+                <a href="https://www.nba.com/raptors/videos"
+                   target="_blank" rel="noopener">
+                    <span>01</span>
+                    <div>
+                        <strong>RAPTORS VIDEOS</strong>
+                        <p>Highlights, interviews and team videos.</p>
+                    </div>
+                    <b>↗</b>
+                </a>
+
+
+                <a href="https://www.youtube.com/@NBA"
+                   target="_blank" rel="noopener">
+                    <span>02</span>
+                    <div>
+                        <strong>NBA YOUTUBE</strong>
+                        <p>Game highlights and the best plays around the league.</p>
+                    </div>
+                    <b>↗</b>
+                </a>
+
+
+                <a href="https://www.nba.com/watch"
+                   target="_blank" rel="noopener">
+                    <span>03</span>
+                    <div>
+                        <strong>NBA LEAGUE PASS</strong>
+                        <p>Live games and full-game replays. Subscription may be required.</p>
+                    </div>
+                    <b>↗</b>
+                </a>
+
             </div>
 
         </section>
@@ -249,24 +509,49 @@
     </main>
 
 
+    <!-- FOOTER -->
     <footer>
-       
-        <div class="brand footer-brand">
+
+        <a href="#" class="brand footer-brand">
             RAPTORS <span class="red">NOW</span>
+        </a>
+
+        <p>
+            A fan-made space for Toronto Raptors basketball.
+        </p>
+
+        <div class="footer-links">
+
+            <a href="https://www.nba.com/raptors/"
+               target="_blank" rel="noopener">
+                RAPTORS ↗
+            </a>
+
+            <a href="https://www.nba.com/"
+               target="_blank" rel="noopener">
+                NBA ↗
+            </a>
+
+            <a href="https://www.instagram.com/raptors/"
+               target="_blank" rel="noopener">
+                INSTAGRAM ↗
+            </a>
+
+            <a href="https://x.com/Raptors"
+               target="_blank" rel="noopener">
+                X ↗
+            </a>
+
         </div>
 
-        <p>AN INTERACTIVE NBA DATA EXPERIENCE</p>
+        <p class="footer-note">
+            Game data provided by ESPN. Not affiliated with the NBA or Toronto Raptors.
+        </p>
 
-        <p class="footer-note">Data provided by ESPN's public API.</p>
-    
     </footer>
 
 
     <script src="script.js"></script>
 
-    
 </body>
-
-
-
 </html>
