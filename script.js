@@ -1,4 +1,3 @@
-
 const API = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba";
 
 const ENDPOINTS = {
@@ -64,8 +63,9 @@ async function loadData() {
         displayGame();
         displayLeague();
         displayRoster();
-
+        
         updateSeason();
+        updateLastUpdated();
 
         console.log("NBA JSON data successfully retrieved.");
 
@@ -94,7 +94,6 @@ async function loadData() {
 
     }
 }
-
 
 // CONNECTION INDICATOR
 
@@ -126,6 +125,15 @@ function updateSeason() {
 
 }
 
+// Last Updated Timestamp
+function updateLastUpdated() {
+    document.getElementById("lastUpdated").textContent =
+        new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        });
+}
 
 // HELPER: FORMAT DATE
 
@@ -236,9 +244,18 @@ function displayGame() {
     document.getElementById("opponentName").textContent =
         opponent.team.displayName || "OPPONENT";
 
-    document.getElementById("opponentLogo").src =
-        opponent.team.logo ||
-        "https://a.espncdn.com/i/teamlogos/nba/500/nba.png";
+    const opponentLogo = document.getElementById("opponentLogo");
+
+const opponentAbbr =
+    opponent.team.abbreviation.toLowerCase();
+
+opponentLogo.src =
+    `https://a.espncdn.com/i/teamlogos/nba/500/${opponentAbbr}.png`;
+
+opponentLogo.onerror = function() {
+    this.onerror = null;
+    this.src = "https://a.espncdn.com/i/teamlogos/nba/500/nba.png";
+};
 
     document.getElementById("gameDate").textContent =
         formatDate(selectedGame.date);
@@ -332,101 +349,79 @@ function showNoGame() {
 
 }
 
-
-// DATA-DRIVEN ENERGY VISUALIZATION
-
+// Raptors Run Visualizer
 function updateEnergy(state, torScore, opponentScore) {
-
     let energy = 20;
-
     let title = "COURT ENERGY";
-
     let description = "Waiting for the next game.";
 
-    // Score and game state influence the energy level.
+    const difference = torScore - opponentScore;
 
     if (state === "in") {
 
-        energy = Math.min(
-            100,
-            45 + (torScore % 30) +
-            (torScore > opponentScore ? 15 : 0)
-        );
-
-        title = "GAME IN PROGRESS";
-
-        description = torScore > opponentScore
-            ? "Toronto currently leads the scoreboard."
-            : "The Raptors are battling on the court.";
-
+        if (difference < -20) {
+            energy = 10;
+            title = "TOUGH NIGHT";
+            description = "The Raptors are down by more than 20 points.";
+        }
+        else if (difference <= -11) {
+            energy = 25;
+            title = "FIGHTING BACK";
+            description = "Toronto is trailing by 11–20 points.";
+        }
+        else if (difference <= 10) {
+            energy = 50;
+            title = "CLOSE GAME";
+            description = "The score is close. Every possession matters.";
+        }
+        else if (difference < 20) {
+            energy = 75;
+            title = "RAPTORS LEAD";
+            description = "Toronto is ahead by 11–19 points.";
+        }
+        else {
+            energy = 100;
+            title = "RAPTORS DOMINATING";
+            description = "Toronto is leading by 20 or more points.";
+        }
     }
 
     else if (state === "post") {
+        energy = difference > 0 ? 100 : difference === 0 ? 50 : 10;
 
-        energy = torScore > opponentScore
-            ? 95
-            : torScore === opponentScore
-                ? 50
-                : 30;
+        title = difference > 0
+            ? "RAPTORS WIN"
+            : difference === 0 ? "GAME TIED" : "GAME COMPLETED";
 
-        title = torScore > opponentScore
-            ? "WINNING ENERGY"
-            : "GAME COMPLETED";
-
-        description = torScore > opponentScore
+        description = difference > 0
             ? "Toronto finished ahead on the scoreboard."
-            : "The matchup has concluded.";
-
+            : difference === 0
+                ? "The game ended tied."
+                : "The Raptors finished behind on the scoreboard.";
     }
 
     else {
-
         energy = 25;
-
         title = "PRE-GAME ENERGY";
-
         description = "The anticipation builds before tip-off.";
-
     }
 
-    // UPDATE METER
-
-    document.getElementById("energyBar").style.width =
-        energy + "%";
-
-    document.getElementById("energyValue").textContent =
-        energy + "%";
-
-    document.getElementById("energyTitle").textContent =
-        title;
-
-    document.getElementById("energyDescription").textContent =
-        description;
-
-    // CHANGE AMBIENT BACKGROUND
+    document.getElementById("energyBar").style.width = energy + "%";
+    document.getElementById("energyValue").textContent = energy + "%";
+    document.getElementById("energyTitle").textContent = title;
+    document.getElementById("energyDescription").textContent = description;
 
     const glow = document.getElementById("backgroundGlow");
-
-    glow.style.background =
-        `rgba(229, 27, 50, ${energy / 700})`;
-
-    glow.style.transform =
-        `scale(${0.8 + energy / 100})`;
-
-    // CHANGE ANIMATION SPEED
+    glow.style.background = `rgba(229, 27, 50, ${energy / 700})`;
+    glow.style.transform = `scale(${0.8 + energy / 100})`;
 
     const visual = document.getElementById("energyVisual");
-
     visual.style.boxShadow =
         `0 0 ${energy / 2}px rgba(229, 27, 50, 0.3)`;
 
     visual.querySelectorAll(".pulse-circle").forEach(circle => {
-
-        circle.style.animationDuration =
-            `${3.5 - (energy / 50)}s`;
-
+        circle.style.animationDuration = `${3.5 - (energy / 50)}s`;
     });
-
 }
 
 
@@ -513,7 +508,6 @@ function displayLeague() {
 
                 <div class="league-status">
                     ${statusText}
-                    ${status.detail || ""}
                 </div>
 
             </div>
