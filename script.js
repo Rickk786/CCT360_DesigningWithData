@@ -12,14 +12,14 @@ let scoreboard = [];
 let selectedPlayer = null;
 
 
-// ELEMENTS
+// elements
 
 const refreshBtn = document.getElementById("refreshBtn");
 const playerGrid = document.getElementById("playerGrid");
 const positionFilter = document.getElementById("positionFilter");
 
 
-// FETCH JSON DATA
+// fetch json data
 
 async function fetchData(url) {
     const response = await fetch(url);
@@ -32,7 +32,7 @@ async function fetchData(url) {
 }
 
 
-// MAIN DATA FUNCTION
+// main data functions
 
 async function loadData() {
 
@@ -49,7 +49,7 @@ async function loadData() {
 
         scoreboard = results[0].events || [];
 
-        // ESPN can group players into position categories.
+        // ESPN group players into position categories
         const athletes = results[1].athletes || [];
 
         roster = athletes.flatMap(group => {
@@ -95,7 +95,7 @@ async function loadData() {
     }
 }
 
-// CONNECTION INDICATOR
+// Connection indicator
 
 function updateConnection(connected) {
 
@@ -108,7 +108,7 @@ function updateConnection(connected) {
 }
 
 
-// SEASON INFORMATION
+// Season Information
 
 function updateSeason() {
 
@@ -135,7 +135,7 @@ function updateLastUpdated() {
         });
 }
 
-// HELPER: FORMAT DATE
+// Format Date
 
 function formatDate(date) {
 
@@ -150,7 +150,7 @@ function formatDate(date) {
 }
 
 
-// HELPER: FIND TORONTO GAME
+// Locate Toronto Game
 
 function findRaptorsGame(events) {
 
@@ -168,7 +168,7 @@ function findRaptorsGame(events) {
 }
 
 
-// GAME CENTER
+// Game Center
 
 function displayGame() {
 
@@ -176,7 +176,7 @@ function displayGame() {
 
     let selectedGame = game;
 
-    // If Toronto is not playing today, find its next scheduled game.
+    // Find Raptors next scheduled game
     if (!selectedGame) {
 
         const now = Date.now();
@@ -230,7 +230,7 @@ function displayGame() {
     const raptorsScore = Number(raptors.score) || 0;
     const opponentScore = Number(opponent.score) || 0;
 
-    // TEAM INFORMATION
+    // Team Info
 
     document.getElementById("raptorsScore").textContent =
         isLive || isFinal ? raptorsScore : "--";
@@ -260,7 +260,7 @@ opponentLogo.onerror = function() {
     document.getElementById("gameDate").textContent =
         formatDate(selectedGame.date);
 
-    // GAME STATUS
+    // Game Status
 
     let statusText = "SCHEDULED";
 
@@ -284,7 +284,7 @@ opponentLogo.onerror = function() {
                 ? "FINAL SCORE"
                 : "UPCOMING MATCHUP";
 
-    // GAME MESSAGE
+    // Game Message
 
     let message = "The Raptors are preparing for their next matchup.";
 
@@ -307,7 +307,7 @@ opponentLogo.onerror = function() {
     document.getElementById("gameMessage").textContent =
         message;
 
-    // UPDATE DATA-DRIVEN VISUALS
+    // Update data visuals
 
     updateEnergy(
         state,
@@ -318,7 +318,7 @@ opponentLogo.onerror = function() {
 }
 
 
-// NO GAME AVAILABLE
+// No game available
 
 function showNoGame() {
 
@@ -425,13 +425,13 @@ function updateEnergy(state, torScore, opponentScore) {
 }
 
 
-// LEAGUE ACTIVITY
+// NBA Activity
 
 function displayLeague() {
 
     const container = document.getElementById("leagueGames");
 
-    // Show current NBA games, excluding Toronto's game.
+    // Show current matchups, excluding Raptors.
 
     const otherGames = scoreboard.filter(event => {
 
@@ -519,7 +519,7 @@ function displayLeague() {
 }
 
 
-// PLAYER ROSTER
+// Roster
 
 function displayRoster() {
 
@@ -608,7 +608,7 @@ function displayRoster() {
 }
 
 
-// BASIC HTML ESCAPING FOR API TEXT
+// HTML for API text
 
 function escapeHTML(value) {
 
@@ -629,7 +629,7 @@ function escapeHTML(value) {
 }
 
 
-// PLAYER SELECTION INTERACTION
+// Player Selection
 
 function selectPlayer(playerId) {
 
@@ -654,7 +654,7 @@ function selectPlayer(playerId) {
         player.headshot?.href ||
         "https://a.espncdn.com/i/teamlogos/nba/500/tor.png";
 
-    // UPDATE SPOTLIGHT
+    // Update Spotlight
 
     document.getElementById("spotlightName").textContent =
         name.toUpperCase();
@@ -667,7 +667,7 @@ function selectPlayer(playerId) {
 
     document.getElementById("spotlightImage").src = image;
 
-    // UPDATE SELECTED CARD
+    // Update Select Card
 
     document.querySelectorAll(".player-card").forEach(card => {
 
@@ -678,7 +678,7 @@ function selectPlayer(playerId) {
 
     });
 
-    // SCROLL TO PLAYER SPOTLIGHT
+    // Scroll to Spotlight
 
     document.getElementById("spotlight").scrollIntoView({
         behavior: "smooth",
@@ -688,7 +688,7 @@ function selectPlayer(playerId) {
 }
 
 
-// EVENT LISTENERS
+// Event listeners
 
 refreshBtn.addEventListener("click", loadData);
 
@@ -722,12 +722,12 @@ playerGrid.addEventListener("keydown", event => {
 });
 
 
-// INITIALIZE WEBSITE
+// Initialize webpage
 
 loadData();
 
 
-// AUTOMATICALLY REFRESH DATA EVERY 60 SECONDS
+// Auto refresh, 60s
 
 setInterval(() => {
 
